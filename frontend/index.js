@@ -8,9 +8,24 @@ async function sprintChallenge5() { // Note the async keyword so you can use `aw
   // 🧠 Use Axios to GET learners and mentors.
   // ❗ Use the variables `mentors` and `learners` to store the data.
   // ❗ Use the await keyword when using axios.
+  const axios = require('axios');
 
   let mentors = [] // fix this
   let learners = [] // fix this
+
+async function getData() {
+  try {
+    const [mentorsResponse , learnerResponse] = await Promise.all([
+      axios.get('your_mentor_api_endpoint'),
+      axios.get('your_learner_api_endpoint')
+    ]);
+    mentors = mentorsResponse.data;
+    learners = learnerResponse.data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+getData();
 
   // 👆 ==================== TASK 1 END ====================== 👆
 
@@ -54,7 +69,39 @@ async function sprintChallenge5() { // Note the async keyword so you can use `aw
     const mentorsList = document.createElement('ul')
 
     // 👆 ==================== TASK 3 END ====================== 👆
+    function createLearnerCards() {
+      const cardsContainer = document.querySelector('.cards');
+      const info = document.querySelector('.info');
+      info.textContent = 'No learner is selected';
 
+      for (let learner of learners) {
+        const card = document.querySelector('div');
+        card.className = 'card';
+
+        const heading = document.createElement('h3');
+        heading.textContent = learner.fullName;
+        card.appendChild(heading);
+
+        const email = document.createElement('div');
+        email.className = 'email';
+        email.textContent = learner.email;
+        card.appendChild(email);
+
+        const mentorsHeading = document.createElement('h4');
+        mentorsHeading.textContent = 'Mentors';
+        card.appendChild(mentorsHeading);
+
+        const mentorList = document.createElement('ul');
+        for (let mentorName of learner.mentor) {
+          const li = document.createElement('il');
+          li.textContent = mentorName;
+        }
+        card.appendChild(mentorList);
+
+
+      }
+      
+    }
     // 👆 WORK ONLY ABOVE THIS LINE 👆
     // 👆 WORK ONLY ABOVE THIS LINE 👆
     // 👆 WORK ONLY ABOVE THIS LINE 👆
