@@ -31,6 +31,17 @@ getData();
 
   // 👇 ==================== TASK 2 START ==================== 👇
 
+  function combineLearnersAndMentors() {
+    learners = learners.map(learner => {
+      const mentorNames = learner.mentors.map(id => {
+        const mentor = mentors.find(mentor => mentor.id === id);
+        return `${mentor.firstName} ${mentor.lastName}`;
+      });
+      return { ...learner, mentors: mentorNames };
+    });
+  }
+  
+
   // 🧠 Combine learners and mentors.
   // ❗ At this point the learner objects only have the mentors' IDs.
   // ❗ Fix the `learners` array so that each learner ends up with this exact structure:
@@ -73,35 +84,82 @@ getData();
       const cardsContainer = document.querySelector('.cards');
       const info = document.querySelector('.info');
       info.textContent = 'No learner is selected';
-
-      for (let learner of learners) {
-        const card = document.querySelector('div');
+    
+      learners.forEach(learner => {
+        const card = document.createElement('div');
         card.className = 'card';
-
+    
         const heading = document.createElement('h3');
         heading.textContent = learner.fullName;
         card.appendChild(heading);
-
+    
         const email = document.createElement('div');
         email.className = 'email';
         email.textContent = learner.email;
         card.appendChild(email);
-
+    
         const mentorsHeading = document.createElement('h4');
         mentorsHeading.textContent = 'Mentors';
+        mentorsHeading.className = 'closed';
         card.appendChild(mentorsHeading);
-
-        const mentorList = document.createElement('ul');
-        for (let mentorName of learner.mentor) {
-          const li = document.createElement('il');
+    
+        const mentorsList = document.createElement('ul');
+        mentorsList.style.display = 'none'; // Initially hidden
+    
+        learner.mentors.forEach(mentorName => {
+          const li = document.createElement('li');
           li.textContent = mentorName;
-        }
-        card.appendChild(mentorList);
-
-
-      }
-      
+          mentorsList.appendChild(li);
+        });
+    
+        card.appendChild(mentorsList);
+        card.dataset.fullName = learner.fullName;
+        cardsContainer.appendChild(card);
+    
+        card.addEventListener('click', evt => {
+          const mentorsHeading = card.querySelector('h4');
+          const didClickTheMentors = evt.target === mentorsHeading;
+          const isCardSelected = card.classList.contains('selected');
+    
+          document.querySelectorAll('.card').forEach(crd => {
+            crd.classList.remove('selected');
+            crd.querySelector('h3').textContent = crd.dataset.fullName;
+          });
+          info.textContent = 'No learner is selected';
+    
+          if (!didClickTheMentors) {
+            if (!isCardSelected) {
+              card.classList.add('selected');
+              heading.textContent += `, ID ${learner.id}`;
+              info.textContent = `The selected learner is ${learner.fullName}`;
+            }
+          } else {
+            card.classList.add('selected');
+            if (mentorsHeading.classList.contains('open')) {
+              mentorsHeading.classList.replace('open', 'closed');
+              mentorsList.style.display = 'none';
+            } else {
+              mentorsHeading.classList.replace('closed', 'open');
+              mentorsList.style.display = 'block';
+            }
+            if (!isCardSelected) {
+              heading.textContent += `, ID ${learner.id}`;
+              info.textContent = `The selected learner is ${learner.fullName}`;
+            }
+          }
+        });
+      });
+    
+      const footer = document.querySelector('footer');
+      const currentYear = new Date().getFullYear();
+      footer.textContent = `© BLOOM INSTITUTE OF TECHNOLOGY ${currentYear}`;
     }
+    
+
+
+      
+      
+    
     // 👆 WORK ONLY ABOVE THIS LINE 👆
     // 👆 WORK ONLY ABOVE THIS LINE 👆
     // 👆 WORK ONLY ABOVE THIS LINE 👆
