@@ -10,22 +10,35 @@ async function sprintChallenge5() { // Note the async keyword so you can use `aw
   // ❗ Use the await keyword when using axios.
   const axios = require('axios');
 
-  let mentors = [] // fix this
-  let learners = [] // fix this
+let learners = [];
+let mentors = [];
 
 async function getData() {
   try {
-    const [mentorsResponse , learnerResponse] = await Promise.all([
-      axios.get('your_mentor_api_endpoint'),
-      axios.get('your_learner_api_endpoint')
+    const [learnersResponse, mentorsResponse] = await Promise.all([
+      axios.get('your_learner_api_endpoint'), // replace with actual endpoint
+      axios.get('your_mentor_api_endpoint')   // replace with actual endpoint
     ]);
+    learners = learnersResponse.data;
     mentors = mentorsResponse.data;
-    learners = learnerResponse.data;
+    console.log('Learners fetched:', learners);
+    console.log('Mentors fetched:', mentors);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
 }
-getData();
+
+function combineLearnersAndMentors() {
+  learners = learners.map(learner => {
+    const mentorNames = learner.mentors.map(id => {
+      const mentor = mentors.find(mentor => mentor.id === id);
+      return `${mentor.firstName} ${mentor.lastName}`;
+    });
+    return { ...learner, mentors: mentorNames };
+  });
+  console.log('Combined learners:', learners);
+}
+
 
   // 👆 ==================== TASK 1 END ====================== 👆
 
@@ -159,7 +172,7 @@ getData();
 
       
       
-    
+    +
     // 👆 WORK ONLY ABOVE THIS LINE 👆
     // 👆 WORK ONLY ABOVE THIS LINE 👆
     // 👆 WORK ONLY ABOVE THIS LINE 👆
