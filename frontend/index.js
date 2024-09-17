@@ -44,15 +44,7 @@ function combineLearnersAndMentors() {
 
   // 👇 ==================== TASK 2 START ==================== 👇
 
-  function combineLearnersAndMentors() {
-    learners = learners.map(learner => {
-      const mentorNames = learner.mentors.map(id => {
-        const mentor = mentors.find(mentor => mentor.id === id);
-        return `${mentor.firstName} ${mentor.lastName}`;
-      });
-      return { ...learner, mentors: mentorNames };
-    });
-  }
+  
   
 
   // 🧠 Combine learners and mentors.
@@ -99,24 +91,23 @@ function combineLearnersAndMentors() {
       info.textContent = 'No learner is selected';
     
       learners.forEach(learner => {
-        const card = document.createElement('div');
         card.className = 'card';
     
-        const heading = document.createElement('h3');
+        
         heading.textContent = learner.fullName;
         card.appendChild(heading);
     
-        const email = document.createElement('div');
+        
         email.className = 'email';
         email.textContent = learner.email;
         card.appendChild(email);
     
-        const mentorsHeading = document.createElement('h4');
+        
         mentorsHeading.textContent = 'Mentors';
         mentorsHeading.className = 'closed';
         card.appendChild(mentorsHeading);
     
-        const mentorsList = document.createElement('ul');
+        
         mentorsList.style.display = 'none'; // Initially hidden
     
         learner.mentors.forEach(mentorName => {
